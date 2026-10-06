@@ -1,1 +1,7 @@
 dataset/
+.DS_Store
+build/
+.cache
+.env
+ENV/
+env/
