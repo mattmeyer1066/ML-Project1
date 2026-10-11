@@ -5,3 +5,7 @@ build/
 .env
 ENV/
 env/
+__pycache__/
+*.npz
+columns.txt
+explore.py
