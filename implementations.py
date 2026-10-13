@@ -1,9 +1,9 @@
 import numpy as np
 
-
 # ============================================================
 # Helper functions
 # ============================================================
+
 
 def applyW(tx, w):
     """
@@ -49,7 +49,7 @@ def compute_mse(y, tx, w):
     pred = applyW(tx, w)
     error = compute_error(y, pred)
 
-    return 0.5 * np.mean(error ** 2)
+    return 0.5 * np.mean(error**2)
 
 
 def sigmoid(t):
@@ -84,10 +84,7 @@ def compute_logistic_loss(y, tx, w):
     eps = 1e-15
     pred = np.clip(pred, eps, 1 - eps)
 
-    return -np.mean(
-        y * np.log(pred)
-        + (1 - y) * np.log(1 - pred)
-    )
+    return -np.mean(y * np.log(pred) + (1 - y) * np.log(1 - pred))
 
 
 def formatOutput(w, loss):
@@ -104,7 +101,7 @@ def formatOutput(w, loss):
             loss as a float
     """
     w = np.asarray(w).reshape(-1)
-    loss = float(loss)
+    loss = np.asarray(loss)
 
     return w, loss
 
@@ -112,6 +109,7 @@ def formatOutput(w, loss):
 # ============================================================
 # 1. Mean Squared Error - Gradient Descent
 # ============================================================
+
 
 def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
     """
@@ -138,6 +136,7 @@ def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
 # ============================================================
 # 2. Mean Squared Error - Stochastic Gradient Descent
 # ============================================================
+
 
 def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
     """
@@ -176,6 +175,7 @@ def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
 # 3. Least Squares
 # ============================================================
 
+
 def least_squares(y, tx):
     """
     Computes linear regression using the normal equations.
@@ -199,6 +199,7 @@ def least_squares(y, tx):
 # ============================================================
 # 4. Ridge Regression
 # ============================================================
+
 
 def ridge_regression(y, tx, lambda_):
     """
@@ -232,6 +233,7 @@ def ridge_regression(y, tx, lambda_):
 # 5. Logistic Regression
 # ============================================================
 
+
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
     """
     Performs logistic regression using gradient descent.
@@ -257,9 +259,8 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
 # 6. Regularized Logistic Regression
 # ============================================================
 
-def reg_logistic_regression(
-    y, tx, lambda_, initial_w, max_iters, gamma
-):
+
+def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     """
     Performs regularized logistic regression using gradient descent.
     """
@@ -268,26 +269,17 @@ def reg_logistic_regression(
         pred = sigmoid(applyW(tx, w))
 
         # Gradient of logistic loss
-        logistic_gradient = (
-            tx.T @ (pred - y)
-        ) / len(y)
+        logistic_gradient = (tx.T @ (pred - y)) / len(y)
 
         # Gradient of lambda * ||w||^2
-        regularization_gradient = (
-            2 * lambda_ * w
-        )
+        regularization_gradient = 2 * lambda_ * w
 
-        return (
-            logistic_gradient
-            + regularization_gradient
-        )
+        return logistic_gradient + regularization_gradient
 
     w = np.asarray(initial_w).copy().reshape(-1)
 
     for i in range(max_iters):
-        gradient = compute_reg_logistic_gradient(
-            y, tx, w
-        )
+        gradient = compute_reg_logistic_gradient(y, tx, w)
 
         w = w - gamma * gradient
 
