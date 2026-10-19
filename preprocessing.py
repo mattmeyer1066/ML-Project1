@@ -123,6 +123,9 @@ NOMINAL = ["MARITAL", "EMPLOY1", "RENTHOM1", "DIABETE3", "BPHIGH4", "_RACEGR3"]
 # Heavy-tailed continuous columns whose extreme values are clipped before scaling
 CLIP_COLS = CONTINUOUS + ["_DRNKWEK", "DROCDY3_", "CHILDREN"]
 
+# Continuous columns whose square is added when cfg["poly"] is True
+POLY_COLS = CONTINUOUS + DAYS
+
 # Default preprocessing choices; each key is one axis of the ablation study
 DEFAULT_CONFIG = {
     "nan_threshold": 0.8,
@@ -130,6 +133,7 @@ DEFAULT_CONFIG = {
     "indicators": True,
     "one_hot": True,
     "clip_pct": 99,
+    "poly": False,
 }
 
 
@@ -312,12 +316,18 @@ def fit_preprocessing(x_train, names, config=None):
 def transform(x, names, params):
     """Apply the learned preprocessing to any data (train, validation or test).
 
-    Output columns: [bias | standardized numeric | missing indicators | one-hot].
+    Output columns: [bias | standardized numeric | squares | missing indicators | one-hot].
     """
     x_clean = clean_codes(x, names)
     x_sel = x_clean[:, params["keep_idx"]]
     x_filled, indicators = apply_imputation(x_sel, params["imp"])
-    blocks = [np.ones((x.shape[0], 1)), apply_scaling(x_filled, params["sc"])]
+    x_num = apply_scaling(x_filled, params["sc"])
+    blocks = [np.ones((x.shape[0], 1)), x_num]
+    if params["cfg"]["poly"]:
+        # Squares of continuous columns only: the square of a binary column adds nothing
+        num_names = [params["keep_names"][k] for k in params["sc"]["num_cols"]]
+        sq = [i for i, n in enumerate(num_names) if n in POLY_COLS]
+        blocks.append(x_num[:, sq] ** 2)
     if params["cfg"]["indicators"]:
         blocks.append(indicators)
     if params["cfg"]["one_hot"]:

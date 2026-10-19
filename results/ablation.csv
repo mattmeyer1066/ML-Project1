@@ -1,0 +1,6 @@
+config,f1_mean,f1_std,threshold
+Full,0.422251,0.00242092,0.2
+No indicators,0.422524,0.00245174,0.21
+No one-hot,0.422079,0.00214792,0.2
+No clipping,0.42262,0.00278437,0.2
+Squares,0.409632,0.00988878,0.29
