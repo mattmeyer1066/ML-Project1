@@ -181,19 +181,7 @@ def least_squares(y, tx):
     Computes linear regression using the normal equations.
     """
 
-    # Left-hand side: X^T X
-    a = tx.T @ tx
-
-    # Right-hand side: X^T y
-    b = tx.T @ y
-
-    # Solve:
-    # (X^T X)w = X^T y
-    w = np.linalg.solve(a, b)
-
-    loss = compute_mse(y, tx, w)
-
-    return formatOutput(w, loss)
+    return ridge_regression(y, tx, 0)
 
 
 # ============================================================
@@ -239,20 +227,7 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
     Performs logistic regression using gradient descent.
     """
 
-    def compute_logistic_gradient(y, tx, w):
-        pred = sigmoid(applyW(tx, w))
-
-        return (tx.T @ (pred - y)) / len(y)
-
-    w = np.asarray(initial_w).copy().reshape(-1)
-
-    for i in range(max_iters):
-        gradient = compute_logistic_gradient(y, tx, w)
-        w = w - gamma * gradient
-
-    loss = compute_logistic_loss(y, tx, w)
-
-    return formatOutput(w, loss)
+    return reg_logistic_regression(y, tx, 0, initial_w, max_iters, gamma)
 
 
 # ============================================================
