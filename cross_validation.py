@@ -70,7 +70,9 @@ def k_fold_indices(n, k=5, seed=42):
     return np.array_split(rng.permutation(n), k)
 
 
-def cross_validate(y, x, names, method, k=5, config=None, threshold=None,**hyperparams):
+def cross_validate(
+    y, x, names, method, k=5, config=None, threshold=None, **hyperparams
+):
     """
     k-fold cross-validation of one method.
 

@@ -23,6 +23,7 @@ def report(label, method, **kwargs):
         return
     print(f"{label:30s} F1 = {mean_f1:.4f} ± {std_f1:.4f}  (threshold {t:.2f})")
 
+
 """
 print("=== 1. Baselines ===")
 report("MSE GD", "mean_squared_error_gd", gamma=0.1, max_iters=300)
@@ -34,11 +35,18 @@ report("Reg. logistic", "reg_logistic_regression", lambda_=1e-4, gamma=0.5, max_
 """
 print("\n=== 2. Tuning lambda (reg. logistic) ===")
 for lambda_ in [1e-6, 1e-4, 1e-2, 1e-1]:
-    report(f"lambda = {lambda_:.0e}", "reg_logistic_regression",
-           lambda_=lambda_, gamma=0.5, max_iters=500)
+    report(
+        f"lambda = {lambda_:.0e}",
+        "reg_logistic_regression",
+        lambda_=lambda_,
+        gamma=0.5,
+        max_iters=500,
+    )
 
 print("\n=== 3. Preprocessing ablation (reg. logistic) ===")
-BEST = dict(lambda_=1e-6, gamma=0.5, max_iters=500)  # update with the best lambda from part 2
+BEST = dict(
+    lambda_=1e-6, gamma=0.5, max_iters=500
+)  # update with the best lambda from part 2
 for label, config in [
     ("Full preprocessing", None),
     ("No missing indicators", {"indicators": False}),
@@ -52,5 +60,10 @@ report("Fixed threshold 0.5", "reg_logistic_regression", threshold=0.5, **BEST)
 print("\n=== 4. Tuning gamma / max_iters (reg. logistic) ===")
 for gamma in [0.1, 0.5, 1.0]:
     for max_iters in [200, 500, 1000]:
-        report(f"gamma={gamma}, iters={max_iters}", "reg_logistic_regression",
-               lambda_=1e-6, gamma=gamma, max_iters=max_iters)
+        report(
+            f"gamma={gamma}, iters={max_iters}",
+            "reg_logistic_regression",
+            lambda_=1e-6,
+            gamma=gamma,
+            max_iters=max_iters,
+        )

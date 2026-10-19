@@ -146,7 +146,9 @@ def plot_lambda(y, x, names):
     _, means, stds, _ = map(np.array, zip(*rows))
 
     fig, ax = plt.subplots(figsize=(WIDTH, 2.3))
-    ax.errorbar(lambdas, means, yerr=stds, color=BLUE, marker="o", ms=3, lw=1.2, capsize=2)
+    ax.errorbar(
+        lambdas, means, yerr=stds, color=BLUE, marker="o", ms=3, lw=1.2, capsize=2
+    )
     ax.set_xscale("log")
     ax.set_xlabel("Regularization strength $\\lambda$")
     ax.set_ylabel("5-fold CV F1")
@@ -212,7 +214,13 @@ def plot_convergence(y, x, names, max_iters=500):
 
     fig, ax = plt.subplots(figsize=(WIDTH, 2.3))
     for j, gamma in enumerate(gammas):
-        ax.plot(iters, losses[:, j], color=GAMMA_COLORS[j], lw=1.3, label=f"$\\gamma$ = {gamma}")
+        ax.plot(
+            iters,
+            losses[:, j],
+            color=GAMMA_COLORS[j],
+            lw=1.3,
+            label=f"$\\gamma$ = {gamma}",
+        )
     ax.set_xlabel("Gradient descent iteration")
     ax.set_ylabel("Training logistic loss")
     ax.legend(frameon=False)
@@ -223,7 +231,9 @@ def plot_ablation(y, x, names):
     """Fig. 5: CV F1 of reg. logistic with one preprocessing step removed at a time."""
     rows = []
     for label, config in ABLATION:
-        m, s, t = cross_validate(y, x, names, "reg_logistic_regression", config=config, **BEST)
+        m, s, t = cross_validate(
+            y, x, names, "reg_logistic_regression", config=config, **BEST
+        )
         rows.append((label, m, s, t))
         print(f"  {label:14s} F1 {m:.4f} ± {s:.4f}")
     save_csv("ablation.csv", ["config", "f1_mean", "f1_std", "threshold"], rows)
